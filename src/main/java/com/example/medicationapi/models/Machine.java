@@ -3,6 +3,7 @@ package com.example.medicationapi.models;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Machine {
@@ -20,8 +21,8 @@ public class Machine {
 
     private String manufacturer;
     private String details;
-    /*@OneToMany(mappedBy = "machine")
-    List<Medication> medicationList;*/
+    @OneToMany(mappedBy = "machine")
+    List<Medication> medicationList;
 
     public long getId() {
         return id;
@@ -47,11 +48,11 @@ public class Machine {
         this.details = details;
     }
 
-    /*public List<Medication> getMedicationList() {
+    public List<Medication> getMedicationList() {
         return medicationList;
     }
 
     public void setMedicationList(List<Medication> medicationList) {
         this.medicationList = medicationList;
-    }*/
+    }
 }
