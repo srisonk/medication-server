@@ -1,12 +1,14 @@
 package com.example.medicationapi.models;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Machine {
+public class Machine extends RepresentationModel<Machine> {
 
     public Machine() {}
 

@@ -2,15 +2,25 @@ package com.example.medicationapi.controller;
 
 import com.example.medicationapi.repository.MachineRepository;
 import com.example.medicationapi.models.Machine;
+import com.example.medicationapi.resthateoas.Greeting;
+import com.example.medicationapi.resthateoas.GreetingController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -23,6 +33,26 @@ public class MachineController {
     @GetMapping("/machine")
     public List<Machine> getMachines() {
         return this.machineRepository.findAll();
+    }
+
+    @GetMapping(value = "/hateoas/machine", produces = { "application/hal+json"})
+    public CollectionModel<Machine> getHateOASMAchine() {
+        List<Machine> machines = this.machineRepository.findAll();
+
+        for(Machine machine : machines) {
+            Long machineId = machine.getId();
+            Link selfLink = linkTo(MachineController.class).slash("machine/"+machineId).withSelfRel();
+            machine.add(selfLink);
+            if(machineRepository.findAll().size() > 0) {
+                Link machinesLink = linkTo(methodOn(MachineController.class)
+                .getMachineById(machineId)).withRel("machineIds");
+                machine.add(machinesLink);
+            }
+        }
+
+        Link link = linkTo(MachineController.class).withSelfRel();
+        CollectionModel<Machine> result = new CollectionModel<>(machines, link);
+        return result;
     }
 
     @GetMapping("/machine/{id}")
