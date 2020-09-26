@@ -1,5 +1,6 @@
 package com.example.medicationapi.models;
 
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -19,19 +20,21 @@ public class Schedule extends RepresentationModel<Schedule> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
-    private long id;
+    private long schedule_id;
 
     private String period;
     private LocalTime time;
+
+    @JsonBackReference
     @ManyToOne
     Medication medication;
 
     public long getId() {
-        return id;
+        return schedule_id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.schedule_id = id;
     }
 
     public String getPeriod() {

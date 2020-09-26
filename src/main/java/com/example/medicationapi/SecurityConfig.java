@@ -33,9 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/**").authenticated()
+                .antMatchers("/h2-console/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Bean

@@ -1,5 +1,7 @@
 package com.example.medicationapi.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -21,24 +23,27 @@ public class Medication extends RepresentationModel<Medication> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
-    private long id;
+    private long medication_id;
 
     private String name;
     private String dosage;
     private String date_created;
     private String date_expiry;
-    @ManyToOne
-    Machine machine;
 
+    @JsonBackReference
+    @ManyToOne
+    private Machine machine;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "medication")
     List<Schedule> scheduleList;
 
     public long getId() {
-        return id;
+        return medication_id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.medication_id = id;
     }
 
     public String getName() {
