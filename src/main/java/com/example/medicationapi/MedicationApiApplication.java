@@ -2,12 +2,16 @@ package com.example.medicationapi;
 
 import com.example.medicationapi.models.Machine;
 import com.example.medicationapi.models.Medication;
+import com.example.medicationapi.models.Schedule;
 import com.example.medicationapi.repository.MachineRepository;
 import com.example.medicationapi.repository.MedicationRepository;
+import com.example.medicationapi.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalTime;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
@@ -24,6 +28,9 @@ public class MedicationApiApplication implements CommandLineRunner {
 	@Autowired
 	private MedicationRepository medicationRepository;
 
+	@Autowired
+	private ScheduleRepository scheduleRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -33,5 +40,7 @@ public class MedicationApiApplication implements CommandLineRunner {
 		this.machineRepository.save(new Machine("Puma","World"));
 
 		this.medicationRepository.save(new Medication("Ibuprofen","5 times day", "2020-01-20", "2022-03-25"));
+
+		this.scheduleRepository.save(new Schedule("daily", LocalTime.parse("12:00:00")));
 	}
 }

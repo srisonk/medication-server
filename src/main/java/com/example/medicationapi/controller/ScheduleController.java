@@ -1,10 +1,11 @@
 package com.example.medicationapi.controller;
 
-import com.example.medicationapi.models.Machine;
 import com.example.medicationapi.models.Schedule;
 import com.example.medicationapi.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -37,6 +41,26 @@ public class ScheduleController {
     @PostMapping("/schedule")
     public Schedule createSchedule(@Validated @RequestBody Schedule schedule) {
         return scheduleRepository.save(schedule);
+    }
+
+    @GetMapping(value = "/hateoas/schedule", produces = { "application/hal+json"})
+    public CollectionModel<Schedule> getHateOASSchedule() {
+        List<Schedule> schedules = this.scheduleRepository.findAll();
+
+        for(Schedule schedule : schedules) {
+            Long scheduleId = schedule.getId();
+            Link selfLink = linkTo(ScheduleController.class).slash("schedule/"+scheduleId).withSelfRel();
+            schedule.add(selfLink);
+            if(scheduleRepository.findAll().size() > 0) {
+                Link scheduleLink = linkTo(methodOn(ScheduleController.class)
+                        .getScheduleById(scheduleId)).withRel("scheduleIds");
+                schedule.add(scheduleLink);
+            }
+        }
+
+        Link link = linkTo(ScheduleController.class).withSelfRel();
+        CollectionModel<Schedule> result = new CollectionModel<>(schedules, link);
+        return result;
     }
 
     @PutMapping("/schedule/{id}")

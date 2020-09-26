@@ -31,7 +31,7 @@ public class MachineController {
     }
 
     @GetMapping(value = "/hateoas/machine", produces = { "application/hal+json"})
-    public CollectionModel<Machine> getHateOASMAchine() {
+    public CollectionModel<Machine> getHateOASMachine() {
         List<Machine> machines = this.machineRepository.findAll();
 
         for(Machine machine : machines) {

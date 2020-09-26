@@ -1,11 +1,13 @@
 package com.example.medicationapi.models;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Medication {
+public class Medication extends RepresentationModel<Medication> {
     public Medication() {}
 
     public Medication(String name, String dosage, String date_created, String date_expiry) {

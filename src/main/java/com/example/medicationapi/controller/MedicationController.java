@@ -1,10 +1,11 @@
 package com.example.medicationapi.controller;
 
-import com.example.medicationapi.models.Machine;
 import com.example.medicationapi.models.Medication;
 import com.example.medicationapi.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -24,6 +28,26 @@ public class MedicationController {
     @GetMapping("/medication")
     public List<Medication> getMedications() {
         return this.medicationRepository.findAll();
+    }
+
+    @GetMapping(value = "/hateoas/medication", produces = { "application/hal+json"})
+    public CollectionModel<Medication> getHateOASMedication() {
+        List<Medication> medications = this.medicationRepository.findAll();
+
+        for(Medication medication : medications) {
+            Long medicationId = medication.getId();
+            Link selfLink = linkTo(MedicationController.class).slash("medication/"+medicationId).withSelfRel();
+            medication.add(selfLink);
+            if(medicationRepository.findAll().size() > 0) {
+                Link medicationLink = linkTo(methodOn(MedicationController.class)
+                        .getMedicationById(medicationId)).withRel("medicationIds");
+                medication.add(medicationLink);
+            }
+        }
+
+        Link link = linkTo(MedicationController.class).withSelfRel();
+        CollectionModel<Medication> result = new CollectionModel<>(medications, link);
+        return result;
     }
 
     @GetMapping("/medication/{id}")

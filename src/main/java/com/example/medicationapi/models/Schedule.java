@@ -1,10 +1,12 @@
 package com.example.medicationapi.models;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity
-public class Schedule {
+public class Schedule extends RepresentationModel<Schedule> {
 
     public Schedule() {}
 
