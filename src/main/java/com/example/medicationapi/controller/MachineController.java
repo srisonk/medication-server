@@ -2,19 +2,14 @@ package com.example.medicationapi.controller;
 
 import com.example.medicationapi.repository.MachineRepository;
 import com.example.medicationapi.models.Machine;
-import com.example.medicationapi.resthateoas.Greeting;
-import com.example.medicationapi.resthateoas.GreetingController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

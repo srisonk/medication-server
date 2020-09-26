@@ -21,6 +21,10 @@ dependencies {
 	compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.4.6'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	testCompile 'com.jayway.jsonpath:json-path'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.4.RELEASE'
+
+
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
