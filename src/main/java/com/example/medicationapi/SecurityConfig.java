@@ -22,7 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .inMemoryAuthentication()
                 .withUser("admin").password(passwordEncoder().encode("admin123")).roles("ADMIN")
                 .and()
-                .withUser("obscurus").password(passwordEncoder().encode("obscurus123")).roles("USER");
+                .withUser("user").password(passwordEncoder().encode("user123")).roles("USER")
+                .and()
+                .withUser("DBAdmin").password(passwordEncoder().encode("DBAdmin123")).roles("DBA");
     }
 
     /*
@@ -31,9 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/api/**").authenticated()
-                .antMatchers("/h2-console/**").authenticated()
+                .antMatchers("/api/hateoas/**").hasRole("ADMIN")
+                .antMatchers("/api/machine").hasAnyRole("ADMIN","USER")
+                .antMatchers("/api/medication").hasAnyRole("ADMIN","USER")
+                .antMatchers("/api/schedule").hasAnyRole("ADMIN","USER")
+                .antMatchers("/h2-console/**").hasRole("DBA")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
@@ -41,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.headers().frameOptions().disable();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
